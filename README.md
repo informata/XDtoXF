@@ -18,6 +18,18 @@ Adobe XD Plugin to export assets to Xamarin.Forms XAML Styles and Resources. Cre
 
 Head over to the [Latest Releases](https://github.com/informata/XDtoXF/releases) page and then download the newest `.xdx` file. Once downloaded, double click to install!
 
+### In developer mode
+
+If you have problems installing this plugin by double click, you can try to install it in developer mode. `xdx` files are just `zip`. So, you can change the extension to `zip`, an uncompress the content of the file in a folder inside this path:
+
+* MacOS:
+    ```~/Library/Application\ Support/Adobe/Adobe\ XD/develop```
+
+* Windows:
+    ```C:\Users\%USERNAME%\AppData\Local\Packages\Adobe.CC.XD_adky2gkssdxte\LocalState\develop```
+
+Note: if `develop` folder doesn't exist, you can create it.
+
 ## Help, Support & Contributions
 
 * Feel free to raise issues if you find any problems.  
@@ -28,6 +40,7 @@ Head over to the [Latest Releases](https://github.com/informata/XDtoXF/releases)
 
 Pull requests merged in this branch:
 
+* v1.3 - Added the generation of assembly tags for font export (Xamarin.Forms >= 4.6) - By [informata](https://github.com/informata/XDtoXF/tree/v1.3-new-fonts-xf-v4.6)
 * v1.2.2 - Added UWP to `OnPlatorm` for fonts export - By [informata](https://github.com/informata/XDtoXF/tree/v1.2.2-add-uwp-font)
 * v1.2.1 - Fixed styles in exporter dialog from pull request [#12](https://github.com/kphillpotts/XDtoXF/pull/12) - By [informata](https://github.com/informata/XDtoXF/tree/v1.2.1-fixed-exporter-styles)
 * v1.2 - Spaces in asset names [#10](https://github.com/kphillpotts/XDtoXF/pull/10), Static resources [#11](https://github.com/kphillpotts/XDtoXF/pull/11) and Font resources [#12](https://github.com/kphillpotts/XDtoXF/pull/12) - By [Pepsi1x1](https://github.com/Pepsi1x1/XDtoXF/tree/fontResources)
