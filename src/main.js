@@ -22,21 +22,33 @@ function convertTo(format, color) {
     }
   }
 
-function createResources(fonts, colors, styles)
+function createResources(fontsAssemblies, fonts, colors, styles)
 {
   let stringToCopy = "";
+
+  // copy fonts assemblies if they exist
+  if (fontsAssemblies.length > 0)
+  {
+    stringToCopy += "For your AssemblyInfo.cs file:\r\n";
+    stringToCopy += "\r\n";
+    stringToCopy += "\\\\ Fonts assemblies (Xamarin.Forms >= v4.6)\r\n";
+    stringToCopy += fontsAssemblies;
+  }
+
+  stringToCopy += "For your ResourcesDictionary:\r\n";
+  stringToCopy += "\r\n";
 
   // copy fonts if they exist
   if (fonts.length > 0)
   {
-    stringToCopy += "<!-- Fonts -->\r\n"
+    stringToCopy += "<!-- Fonts -->\r\n";
     stringToCopy += fonts;
   }
 
   // copy colors if they exist
   if (colors.length > 0)
   {
-    stringToCopy += "<!-- Colors -->\r\n"
+    stringToCopy += "<!-- Colors -->\r\n";
     stringToCopy += colors;
   }
 
@@ -46,7 +58,7 @@ function createResources(fonts, colors, styles)
     if (stringToCopy.length > 0) 
       stringToCopy += "\r\n";
     
-    stringToCopy += "<!-- Styles -->\r\n"
+    stringToCopy += "<!-- Styles -->\r\n";
     stringToCopy += styles;
   }
   return stringToCopy;
@@ -95,6 +107,9 @@ function getFontStyles()
     fontDef += "\t<On Platform=\"UWP\" Value=\"" + concatFont + ".ttf#" + concatFont + "\" />\r\n"; 
     fontDef += "</OnPlatform>\r\n"; 
 
+    let fontAssembly = "";
+    fontAssembly += "[assembly: ExportFont(\"" + concatFont + ".ttf\", Alias = \"" + concatFont + "\")]\r\n";
+
     let found = fontCollection.find(function(element) { 
       return element.resourceKey == concatFont; 
     }); 
@@ -103,7 +118,8 @@ function getFontStyles()
       fontCollection[fontCollectionIndex++] = {
         resourceKey: concatFont,
         xamarinResourceReference: "{StaticResource " + concatFont + "}",
-        xamarinResource: fontDef
+        xamarinResource: fontDef,
+        xamarinAssembly: fontAssembly
       }
     }
   }
@@ -215,7 +231,7 @@ function getColors() {
               <img class="icon" src="./images/icon48.png" />
               </h1>
               <hr/>
-              <p>Here are the Colors and Character Styles defined in the Assets of your project.</p>
+              <p>Here are the Fonts, Colors and Character Styles defined in the Assets of your project.</p>
               <textarea id="resources" readonly="true" height=400>` + colors + `</textarea>
               <hr/>
               <p>You can manually copy the resources you need from the text area above, or just hit Copy button below to copy all resources to the clipboard.</p>
@@ -266,11 +282,15 @@ function getColors() {
     e.preventDefault();
   }
 
-  function fontsToString(fonts) {
+  function fontsToString(fonts, type) {
     let fontsString = "";
 
     for (let i = 0; i < fonts.length; i++) {
-      fontsString += fonts[i].xamarinResource;
+      if(type == "resources") {
+        fontsString += fonts[i].xamarinResource;
+      } else if(type == "assemblies") {
+        fontsString += fonts[i].xamarinAssembly;
+      }
     }
 
     if(fontsString.length > 0) {
@@ -283,7 +303,8 @@ async function myPluginCommand(selection) {
   // get the colors and character assets
   let colors = getColors();
   let fontsCollection = getFontStyles();
-  let fonts = fontsToString(fontsCollection);
+  let fonts = fontsToString(fontsCollection, "resources");
+  let fontsAssemblies = fontsToString(fontsCollection, "assemblies");
   let styles = getCharacterAssets(fontsCollection);
 
   if (colors.length == 0 && styles.length==0)
@@ -292,7 +313,7 @@ async function myPluginCommand(selection) {
   }
   else
   {
-    let outputText = createResources(fonts, colors, styles);
+    let outputText = createResources(fontsAssemblies, fonts, colors, styles);
     const dialog = getDialog(outputText);
     const result = await dialog.showModal();
     dialog.remove();
